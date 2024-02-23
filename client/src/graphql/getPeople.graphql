@@ -1,0 +1,8 @@
+query GetPeople {
+  getPeople {
+    id
+    name
+    age
+    bookId
+  }
+}

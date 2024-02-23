@@ -1,7 +1,8 @@
-query GetPersonById($getPersonByIdId: String!) {
-  getPersonById(id: $getPersonByIdId) {
+query GetPersonById($hey: String!) {
+  getPersonById(hey: $hey) {
     id
     name
     age
+    bookId
   }
 }

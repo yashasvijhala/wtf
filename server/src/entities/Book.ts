@@ -1,10 +1,9 @@
 import { Field, ID, ObjectType } from 'type-graphql'
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
-import { Person } from './Person'
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
 
 @ObjectType()
 @Entity()
-export class Book {
+export class Book extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   @Field(() => ID)
   id: string
@@ -12,12 +11,4 @@ export class Book {
   @Column()
   @Field(() => String)
   title?: string
-
-  @Column()
-  @Field(() => String)
-  personId?: string
-
-  @Field(() => [Person], { nullable: true })
-  @OneToMany(() => Person, person => person.bookId)
-  person: Person[]
 }

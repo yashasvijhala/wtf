@@ -26,4 +26,9 @@ export class UserResolver {
       }
     })
   }
+
+  @Query(() => [Person])
+  async getPeople(): Promise<Person[]> {
+    return await Person.find()
+  }
 }
