@@ -1,0 +1,7 @@
+query GetPersonById($getPersonByIdId: String!) {
+  getPersonById(id: $getPersonByIdId) {
+    id
+    name
+    age
+  }
+}
