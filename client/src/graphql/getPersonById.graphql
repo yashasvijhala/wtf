@@ -1,8 +1,10 @@
 query GetPersonById($hey: String!) {
   getPersonById(hey: $hey) {
-    id
-    name
     age
-    bookId
+    book {
+      title
+    }
+    name
+    id
   }
 }

@@ -1,16 +1,33 @@
 import { Button, Input, Modal, Space, Table } from 'antd'
 import React, { useState } from 'react'
-import { useCreatePersonMutation, useGetPeopleQuery } from './generated/graphql'
+import {
+  useCreateBookMutation,
+  useCreatePersonMutation,
+  useGetPeopleQuery,
+  useGetPersonByIdQuery
+} from './generated/graphql'
 
 const App: React.FC = () => {
   const { data: getPeople, refetch } = useGetPeopleQuery()
+
   const [createPerson] = useCreatePersonMutation()
+  const [createBook] = useCreateBookMutation()
+  const [isDetailsModalVisible, setIsDetailsModalVisible] = useState(false)
   const [isModalVisible, setIsModalVisible] = useState(false)
+  const [isBookModalVisible, setIsBookModalVisible] = useState(false)
   const [person, setPerson] = useState({
     name: '',
     age: 0
   })
-
+  const [book, setBook] = useState({
+    title: '',
+    personId: ''
+  })
+  const { data: getPersonById } = useGetPersonByIdQuery({
+    variables: {
+      hey: book.personId
+    }
+  })
   return (
     <div className="App">
       <Button
@@ -34,16 +51,32 @@ const App: React.FC = () => {
             key: 'name'
           },
           {
-            title: 'Age',
-            dataIndex: 'age',
-            key: 'age'
-          },
-          {
             title: 'Action',
             key: 'action',
             render: (text: any, record: any) => (
               <Space size="middle">
-                <Button onClick={() => {}}>Add Book</Button>
+                <Button
+                  onClick={() => {
+                    setIsBookModalVisible(true)
+                    setBook(prev => ({
+                      ...prev,
+                      personId: record.id
+                    }))
+                  }}
+                >
+                  Add Book
+                </Button>
+                <Button
+                  onClick={() => {
+                    setIsDetailsModalVisible(true)
+                    setBook(prev => ({
+                      ...prev,
+                      personId: record.id
+                    }))
+                  }}
+                >
+                  View Details
+                </Button>
               </Space>
             )
           }
@@ -87,6 +120,45 @@ const App: React.FC = () => {
             }))
           }
         />
+      </Modal>
+      <Modal
+        open={isBookModalVisible}
+        onCancel={() => setIsBookModalVisible(false)}
+        onOk={async () => {
+          await createBook({
+            variables: {
+              personId: book.personId,
+              title: book.title
+            }
+          })
+          setIsBookModalVisible(false)
+          setBook({ personId: '', title: '' })
+          refetch()
+        }}
+      >
+        <Input
+          type="text"
+          placeholder="Title"
+          value={book.title}
+          onChange={e =>
+            setBook(prev => ({
+              ...prev,
+              title: e.target.value
+            }))
+          }
+        ></Input>
+      </Modal>
+      <Modal
+        open={isDetailsModalVisible}
+        onCancel={() => setIsDetailsModalVisible(false)}
+        onOk={() => {
+          setIsDetailsModalVisible(false)
+        }}
+      >
+        <p>{getPersonById?.getPersonById.age}</p>
+        <p>{getPersonById?.getPersonById.name}</p>
+        <p>{getPersonById?.getPersonById.book?.title}</p>
+        <p>{getPersonById?.getPersonById.id}</p>
       </Modal>
     </div>
   )
