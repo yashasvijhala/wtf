@@ -15,232 +15,186 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  DateTime: { input: any; output: any; }
 };
 
-export type Book = {
-  __typename?: 'Book';
+export type Comment = {
+  __typename?: 'Comment';
+  comment: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
   id: Scalars['ID']['output'];
-  person: Array<Person>;
-  personId?: Maybe<Scalars['String']['output']>;
-  title: Scalars['String']['output'];
+  post: Post;
+  postId: Scalars['String']['output'];
+  userName: Scalars['String']['output'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
-  CreateBook: Scalars['Boolean']['output'];
-  createPerson: Scalars['Boolean']['output'];
+  createPost: Scalars['Boolean']['output'];
 };
 
 
-export type MutationCreateBookArgs = {
-  PersonId: Scalars['String']['input'];
+export type MutationCreatePostArgs = {
+  ImageUrl?: InputMaybe<Scalars['String']['input']>;
+  UserName?: InputMaybe<Scalars['String']['input']>;
+  body?: InputMaybe<Scalars['String']['input']>;
+  subredditTopic: Scalars['String']['input'];
   title: Scalars['String']['input'];
 };
 
-
-export type MutationCreatePersonArgs = {
-  age: Scalars['Float']['input'];
-  name: Scalars['String']['input'];
-};
-
-export type Person = {
-  __typename?: 'Person';
-  age: Scalars['Float']['output'];
-  book?: Maybe<Book>;
-  bookId?: Maybe<Scalars['String']['output']>;
+export type Post = {
+  __typename?: 'Post';
+  body: Scalars['String']['output'];
+  comments?: Maybe<Array<Comment>>;
+  createdAt: Scalars['DateTime']['output'];
   id: Scalars['ID']['output'];
-  name: Scalars['String']['output'];
+  image?: Maybe<Scalars['String']['output']>;
+  subreddit?: Maybe<Subreddit>;
+  subredditId?: Maybe<Scalars['String']['output']>;
+  title: Scalars['String']['output'];
+  userName: Scalars['String']['output'];
+  votes?: Maybe<Array<Vote>>;
 };
 
 export type Query = {
   __typename?: 'Query';
-  getPeople: Array<Person>;
-  getPersonById: Person;
-  people: Array<Scalars['String']['output']>;
+  getPosts: Array<Post>;
+  getSubredditsByTopic: Array<Subreddit>;
 };
 
 
-export type QueryGetPersonByIdArgs = {
-  hey: Scalars['String']['input'];
+export type QueryGetSubredditsByTopicArgs = {
+  topic: Scalars['String']['input'];
 };
 
-export type CreateBookMutationVariables = Exact<{
+export type Subreddit = {
+  __typename?: 'Subreddit';
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  posts?: Maybe<Array<Post>>;
+  topic: Scalars['String']['output'];
+};
+
+export type Vote = {
+  __typename?: 'Vote';
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  post: Post;
+  postId: Scalars['String']['output'];
+  upVote: Scalars['Boolean']['output'];
+  userName: Scalars['String']['output'];
+};
+
+export type CreatePostMutationVariables = Exact<{
+  subredditTopic: Scalars['String']['input'];
   title: Scalars['String']['input'];
-  personId: Scalars['String']['input'];
+  userName?: InputMaybe<Scalars['String']['input']>;
+  body?: InputMaybe<Scalars['String']['input']>;
+  imageUrl?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type CreateBookMutation = { __typename?: 'Mutation', CreateBook: boolean };
+export type CreatePostMutation = { __typename?: 'Mutation', createPost: boolean };
 
-export type CreatePersonMutationVariables = Exact<{
-  age: Scalars['Float']['input'];
-  name: Scalars['String']['input'];
-}>;
+export type GetPostsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CreatePersonMutation = { __typename?: 'Mutation', createPerson: boolean };
-
-export type GetPeopleQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetPostsQuery = { __typename?: 'Query', getPosts: Array<{ __typename?: 'Post', body: string, id: string, createdAt: any, image?: string | null, title: string, userName: string, comments?: Array<{ __typename?: 'Comment', comment: string, id: string, createdAt: any, userName: string }> | null, subreddit?: { __typename?: 'Subreddit', createdAt: any, id: string, topic: string } | null }> };
 
 
-export type GetPeopleQuery = { __typename?: 'Query', getPeople: Array<{ __typename?: 'Person', id: string, name: string, age: number, bookId?: string | null }> };
-
-export type GetPersonByIdQueryVariables = Exact<{
-  hey: Scalars['String']['input'];
-}>;
-
-
-export type GetPersonByIdQuery = { __typename?: 'Query', getPersonById: { __typename?: 'Person', age: number, name: string, id: string, book?: { __typename?: 'Book', title: string } | null } };
-
-
-export const CreateBookDocument = gql`
-    mutation CreateBook($title: String!, $personId: String!) {
-  CreateBook(title: $title, PersonId: $personId)
+export const CreatePostDocument = gql`
+    mutation CreatePost($subredditTopic: String!, $title: String!, $userName: String, $body: String, $imageUrl: String) {
+  createPost(
+    subredditTopic: $subredditTopic
+    title: $title
+    UserName: $userName
+    body: $body
+    ImageUrl: $imageUrl
+  )
 }
     `;
-export type CreateBookMutationFn = Apollo.MutationFunction<CreateBookMutation, CreateBookMutationVariables>;
+export type CreatePostMutationFn = Apollo.MutationFunction<CreatePostMutation, CreatePostMutationVariables>;
 
 /**
- * __useCreateBookMutation__
+ * __useCreatePostMutation__
  *
- * To run a mutation, you first call `useCreateBookMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateBookMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useCreatePostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePostMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [createBookMutation, { data, loading, error }] = useCreateBookMutation({
+ * const [createPostMutation, { data, loading, error }] = useCreatePostMutation({
  *   variables: {
+ *      subredditTopic: // value for 'subredditTopic'
  *      title: // value for 'title'
- *      personId: // value for 'personId'
+ *      userName: // value for 'userName'
+ *      body: // value for 'body'
+ *      imageUrl: // value for 'imageUrl'
  *   },
  * });
  */
-export function useCreateBookMutation(baseOptions?: Apollo.MutationHookOptions<CreateBookMutation, CreateBookMutationVariables>) {
+export function useCreatePostMutation(baseOptions?: Apollo.MutationHookOptions<CreatePostMutation, CreatePostMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateBookMutation, CreateBookMutationVariables>(CreateBookDocument, options);
+        return Apollo.useMutation<CreatePostMutation, CreatePostMutationVariables>(CreatePostDocument, options);
       }
-export type CreateBookMutationHookResult = ReturnType<typeof useCreateBookMutation>;
-export type CreateBookMutationResult = Apollo.MutationResult<CreateBookMutation>;
-export type CreateBookMutationOptions = Apollo.BaseMutationOptions<CreateBookMutation, CreateBookMutationVariables>;
-export const CreatePersonDocument = gql`
-    mutation CreatePerson($age: Float!, $name: String!) {
-  createPerson(age: $age, name: $name)
-}
-    `;
-export type CreatePersonMutationFn = Apollo.MutationFunction<CreatePersonMutation, CreatePersonMutationVariables>;
-
-/**
- * __useCreatePersonMutation__
- *
- * To run a mutation, you first call `useCreatePersonMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreatePersonMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createPersonMutation, { data, loading, error }] = useCreatePersonMutation({
- *   variables: {
- *      age: // value for 'age'
- *      name: // value for 'name'
- *   },
- * });
- */
-export function useCreatePersonMutation(baseOptions?: Apollo.MutationHookOptions<CreatePersonMutation, CreatePersonMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreatePersonMutation, CreatePersonMutationVariables>(CreatePersonDocument, options);
-      }
-export type CreatePersonMutationHookResult = ReturnType<typeof useCreatePersonMutation>;
-export type CreatePersonMutationResult = Apollo.MutationResult<CreatePersonMutation>;
-export type CreatePersonMutationOptions = Apollo.BaseMutationOptions<CreatePersonMutation, CreatePersonMutationVariables>;
-export const GetPeopleDocument = gql`
-    query GetPeople {
-  getPeople {
-    id
-    name
-    age
-    bookId
-  }
-}
-    `;
-
-/**
- * __useGetPeopleQuery__
- *
- * To run a query within a React component, call `useGetPeopleQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetPeopleQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetPeopleQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetPeopleQuery(baseOptions?: Apollo.QueryHookOptions<GetPeopleQuery, GetPeopleQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetPeopleQuery, GetPeopleQueryVariables>(GetPeopleDocument, options);
-      }
-export function useGetPeopleLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPeopleQuery, GetPeopleQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetPeopleQuery, GetPeopleQueryVariables>(GetPeopleDocument, options);
-        }
-export function useGetPeopleSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetPeopleQuery, GetPeopleQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetPeopleQuery, GetPeopleQueryVariables>(GetPeopleDocument, options);
-        }
-export type GetPeopleQueryHookResult = ReturnType<typeof useGetPeopleQuery>;
-export type GetPeopleLazyQueryHookResult = ReturnType<typeof useGetPeopleLazyQuery>;
-export type GetPeopleSuspenseQueryHookResult = ReturnType<typeof useGetPeopleSuspenseQuery>;
-export type GetPeopleQueryResult = Apollo.QueryResult<GetPeopleQuery, GetPeopleQueryVariables>;
-export const GetPersonByIdDocument = gql`
-    query GetPersonById($hey: String!) {
-  getPersonById(hey: $hey) {
-    age
-    book {
-      title
+export type CreatePostMutationHookResult = ReturnType<typeof useCreatePostMutation>;
+export type CreatePostMutationResult = Apollo.MutationResult<CreatePostMutation>;
+export type CreatePostMutationOptions = Apollo.BaseMutationOptions<CreatePostMutation, CreatePostMutationVariables>;
+export const GetPostsDocument = gql`
+    query GetPosts {
+  getPosts {
+    body
+    comments {
+      comment
+      id
+      createdAt
+      userName
     }
-    name
     id
+    createdAt
+    image
+    subreddit {
+      createdAt
+      id
+      topic
+    }
+    title
+    userName
   }
 }
     `;
 
 /**
- * __useGetPersonByIdQuery__
+ * __useGetPostsQuery__
  *
- * To run a query within a React component, call `useGetPersonByIdQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetPersonByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetPostsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetPersonByIdQuery({
+ * const { data, loading, error } = useGetPostsQuery({
  *   variables: {
- *      hey: // value for 'hey'
  *   },
  * });
  */
-export function useGetPersonByIdQuery(baseOptions: Apollo.QueryHookOptions<GetPersonByIdQuery, GetPersonByIdQueryVariables> & ({ variables: GetPersonByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+export function useGetPostsQuery(baseOptions?: Apollo.QueryHookOptions<GetPostsQuery, GetPostsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetPersonByIdQuery, GetPersonByIdQueryVariables>(GetPersonByIdDocument, options);
+        return Apollo.useQuery<GetPostsQuery, GetPostsQueryVariables>(GetPostsDocument, options);
       }
-export function useGetPersonByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPersonByIdQuery, GetPersonByIdQueryVariables>) {
+export function useGetPostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPostsQuery, GetPostsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetPersonByIdQuery, GetPersonByIdQueryVariables>(GetPersonByIdDocument, options);
+          return Apollo.useLazyQuery<GetPostsQuery, GetPostsQueryVariables>(GetPostsDocument, options);
         }
-export function useGetPersonByIdSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetPersonByIdQuery, GetPersonByIdQueryVariables>) {
+export function useGetPostsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetPostsQuery, GetPostsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetPersonByIdQuery, GetPersonByIdQueryVariables>(GetPersonByIdDocument, options);
+          return Apollo.useSuspenseQuery<GetPostsQuery, GetPostsQueryVariables>(GetPostsDocument, options);
         }
-export type GetPersonByIdQueryHookResult = ReturnType<typeof useGetPersonByIdQuery>;
-export type GetPersonByIdLazyQueryHookResult = ReturnType<typeof useGetPersonByIdLazyQuery>;
-export type GetPersonByIdSuspenseQueryHookResult = ReturnType<typeof useGetPersonByIdSuspenseQuery>;
-export type GetPersonByIdQueryResult = Apollo.QueryResult<GetPersonByIdQuery, GetPersonByIdQueryVariables>;
+export type GetPostsQueryHookResult = ReturnType<typeof useGetPostsQuery>;
+export type GetPostsLazyQueryHookResult = ReturnType<typeof useGetPostsLazyQuery>;
+export type GetPostsSuspenseQueryHookResult = ReturnType<typeof useGetPostsSuspenseQuery>;
+export type GetPostsQueryResult = Apollo.QueryResult<GetPostsQuery, GetPostsQueryVariables>;

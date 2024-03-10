@@ -1,0 +1,15 @@
+mutation CreatePost(
+  $subredditTopic: String!
+  $title: String!
+  $userName: String
+  $body: String
+  $imageUrl: String
+) {
+  createPost(
+    subredditTopic: $subredditTopic
+    title: $title
+    UserName: $userName
+    body: $body
+    ImageUrl: $imageUrl
+  )
+}

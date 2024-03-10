@@ -1,3 +1,0 @@
-mutation CreateBook($title: String!, $personId: String!) {
-  CreateBook(title: $title, PersonId: $personId)
-}

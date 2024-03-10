@@ -1,0 +1,21 @@
+query GetPosts {
+  getPosts {
+    body
+    comments {
+      comment
+      id
+      createdAt
+      userName
+    }
+    id
+    createdAt
+    image
+    subreddit {
+      createdAt
+      id
+      topic
+    }
+    title
+    userName
+  }
+}

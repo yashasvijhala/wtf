@@ -1,3 +1,0 @@
-mutation CreatePerson($age: Float!, $name: String!) {
-  createPerson(age: $age, name: $name)
-}
