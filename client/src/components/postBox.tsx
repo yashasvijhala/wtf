@@ -30,7 +30,7 @@ export const PostBox: FC = () => {
 
   return (
     <>
-      {console.log('is auth??', user, isAuthenticated)}
+      {console.log('isauth??', user, isAuthenticated)}
       <Form
         className="z-50 bg-white rounded-md border border-gray-300 p-2"
         onFinish={async () => {
