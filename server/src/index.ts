@@ -11,7 +11,7 @@ export let conn: DataSource
 async function startServer() {
   conn = new DataSource({
     type: 'postgres',
-    url: 'postgres://postgres.tpmashrepkfstgbvpnno:typeorm@8233@aws-0-ap-south-1.pooler.supabase.com:5432/postgres',
+    url: 'postgres://postgres.tpmashrepkfstgbvpnno:deepansh@6543210@aws-0-ap-south-1.pooler.supabase.com:5432/postgres',
     synchronize: true,
     logging: false,
     entities: [Post, Subreddit, Vote, Comment],
